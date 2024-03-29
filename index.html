@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banking Website</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url('https://example.com/path/to/Screenshot (573).png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 255, 255, 0.9); /* Add a semi-transparent white background to improve readability */
+        transition: all 0.3s ease;
+    }
+
+    input[type="text"], input[type="password"], input[type="number"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    button {
+        width: calc(100% - 20px);
+        padding: 10px 0;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .balance-container {
+        margin-top: 20px;
+    }
+
+    .balance {
+        font-size: 24px;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .operations button {
+        margin-top: 10px;
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .logo img {
+        width: 150px;
+        height: auto;
+        border-radius: 50%;
+        border: 2px solid #007bff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    /* Additional Styles */
+    h2 {
+        color: #007bff;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    #loginForm {
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    #bankOperations {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+</style>
+</head>
+<body>
+<div class="container" id="loginForm">
+    <div class="logo">
+        <img src="" alt="Logo">
+    </div>
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button onclick="authenticate()">Login</button>
+</div>
+
+<div class="container" id="bankOperations" style="display: none;">
+    <div class="logo">
+        <img src="C:\Users\Hi\Pictures\Screenshots\Screenshot (573).png" alt="Logo">
+    </div>
+    <h2>Welcome <span id="loggedInUser"></span></h2>
+    <div class="balance-container">
+        <p>Balance:</p>
+        <p class="balance">$<span id="balance">0</span></p>
+    </div>
+    <div class="operations">
+        <button style="background-color: #28a745;" onclick="deposit()">Deposit</button>
+        <button style="background-color: #dc3545;" onclick="withdraw()">Withdraw</button>
+        <button style="background-color: #ffc107; color: #000;" onclick="viewBalance()">View Balance</button>
+        <button style="background-color: #17a2b8;" onclick="changePin()">Change PIN</button>
+        <button style="background-color: #6c757d;" onclick="generateStatement()">Generate Account Statement</button>
+        <button style="background-color: #007bff;" onclick="logout()">Logout</button>
+    </div>
+</div>
+
+<script>
+    let loggedIn = false;
+    let balance = 0;
+    let pin = "1234"; // Example PIN, in real-world scenarios, this should be stored securely in a backend system
+    let currentUser = "";
+
+    function authenticate() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        
+        // Example authentication logic, replace with actual authentication logic
+        if (username === "user" && password === "password") {
+            loggedIn = true;
+            currentUser = username;
+            updateUI();
+        } else {
+            alert("Invalid username or password");
+        }
+    }
+
+    function updateUI() {
+        if (loggedIn) {
+            document.getElementById("loggedInUser").innerText = currentUser;
+            document.getElementById("balance").innerText = balance;
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("bankOperations").style.display = "block";
+        } else {
+            document.getElementById("loginForm").style.display = "block";
+            document.getElementById("bankOperations").style.display = "none";
+        }
+    }
+
+    function deposit() {
+        const amount = parseFloat(prompt("Enter deposit amount:"));
+        if (!isNaN(amount) && amount > 0) {
+            balance += amount;
+            updateUI();
+        } else {
+            alert("Invalid amount");
+        }
+    }
+
+    function withdraw() {
+        const amount = parseFloat(prompt("Enter withdrawal amount:"));
+        if (!isNaN(amount) && amount > 0 && amount <= balance) {
+            balance -= amount;
+            updateUI();
+        } else {
+            alert("Invalid amount or insufficient balance");
+        }
+    }
+
+    function viewBalance() {
+        alert("Your current balance is: $" + balance);
+    }
+
+    function changePin() {
+        const currentPin = prompt("Enter current PIN:");
+        if (currentPin === pin) {
+            const newPin = prompt("Enter new PIN:");
+            if (newPin.length === 4) {
+                pin = newPin;
+                alert("PIN changed successfully");
+            } else {
+                alert("New PIN must be 4 digits long");
+            }
+        } else {
+            alert("Incorrect PIN");
+        }
+    }
+
+    function generateStatement() {
+        // In a real-world scenario, you would generate an account statement and possibly offer it as a download
+        alert("Account statement generated");
+    }
+
+    function logout() {
+        loggedIn = false;
+        currentUser = "";
+        updateUI();
+    }
+
+    updateUI(); // Update UI initially based on login status
+</script>
+</body>
+</html>
